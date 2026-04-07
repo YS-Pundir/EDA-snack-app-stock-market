@@ -33,14 +33,14 @@ print(df)
 
 df = pd.DataFrame.from_dict(data['Time Series (Daily)'], orient='index')
 
-# 3. Clean the column names (removing "1. ", "2. ", etc.)
+#  Clean the column names (removing "1. ", "2. ", etc.)
 # Instead of '1. open', it becomes just 'open'
 df.columns = [c.split('. ')[1] for c in df.columns]
 
-# 4. Convert all columns to numeric (they come as strings from the API)
+#  Convert all columns to numeric (they come as strings from the API)
 df = df.apply(pd.to_numeric)
 
-# 5. Convert the index to actual Datetime objects
+#  Convert the index to actual Datetime objects
 df.index = pd.to_datetime(df.index)
 print("-"*60)
 print("Data After cleaning : ")
@@ -58,11 +58,37 @@ print(df.isnull().sum())
 fig1=px.histogram(
     df,
     x="volume",
+    title="Distribution of volume"
 )
 fig1.show()
 
 fig2=px.histogram(
     df,
-    x="open"
+    x="open",
+    title="Distribution of open data"
 )
 fig2.show()
+
+# 4. inspecting the outliers
+
+fig3=px.box(
+    df,
+    y="volume",
+    title="Outliers of volume in data"
+)
+fig3.show()
+fig4=px.box(
+    df,
+    y="open",
+    title="Outliers of open data"
+)
+fig4.show()
+
+# 5. inspecting the coorelation bitween the variables in df
+corr=df.corr(numeric_only=True)
+fig5=px.imshow(
+    corr,
+    text_auto=True,
+    title="Corelation heat map"
+)
+fig5.show()
