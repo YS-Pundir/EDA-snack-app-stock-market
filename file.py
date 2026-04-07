@@ -2,6 +2,7 @@ import requests
 import os
 from dotenv import load_dotenv
 import pandas as pd
+import plotly.express as px 
 
 load_dotenv()
 
@@ -26,4 +27,42 @@ else:
     print(response.status_code)
 
 df=pd.DataFrame(data)
+print("<>"*60)
+print("Original data : ")
 print(df)
+
+df = pd.DataFrame.from_dict(data['Time Series (Daily)'], orient='index')
+
+# 3. Clean the column names (removing "1. ", "2. ", etc.)
+# Instead of '1. open', it becomes just 'open'
+df.columns = [c.split('. ')[1] for c in df.columns]
+
+# 4. Convert all columns to numeric (they come as strings from the API)
+df = df.apply(pd.to_numeric)
+
+# 5. Convert the index to actual Datetime objects
+df.index = pd.to_datetime(df.index)
+print("-"*60)
+print("Data After cleaning : ")
+print(df)
+# 2. INspecting the data quality , looking for  missing data or incorrect datatypes
+print("-"*50)
+print("Sumamry of data structure : ")
+print()
+print()
+print(df.info())
+print("Summary of the null values in DF : ")
+print(df.isnull().sum())
+
+# 3. inspecting the distribution in the data 
+fig1=px.histogram(
+    df,
+    x="volume",
+)
+fig1.show()
+
+fig2=px.histogram(
+    df,
+    x="open"
+)
+fig2.show()
