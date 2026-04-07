@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 import plotly.express as px 
+import streamlit as st
 
 load_dotenv()
 
@@ -92,3 +93,23 @@ fig5=px.imshow(
     title="Corelation heat map"
 )
 fig5.show()
+
+# streamlit app
+st.title("EDA Snak App")
+st.markdown("Automated Exploratory Data Analysis of Real Time Stock Data.")
+
+# showcasignt the clean data
+st.subheader("Clean Data (Last five days)")
+st.dataframe(df.tail())
+
+# distrubution analysis
+st.subheader("Distribution Analysis")
+st.plotly_chart(fig1)
+st.plotly_chart(fig2)
+#outliers analysis
+st.subheader("Outliers analysis")
+st.plotly_chart(fig3)
+st.plotly_chart(fig4)
+# Corelartion heat map
+st.subheader("🌡️ Correlation Analysis")
+st.plotly_chart(fig5) # Heatmap
